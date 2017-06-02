@@ -8,36 +8,36 @@ import (
 	"log"
 	"github.com/bernhardkern/helloworld_go/data"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/bernhardkern/helloworld_go/rest"
 )
-
-func Test(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome!\n")
-}
 
 func main() {
 	fmt.Println("Hello world")
 	fmt.Println("Hello world3")
-	router := httprouter.New()
-	router.GET("/", Test)
 
-	mySql, err := data.NewMySQL()
+	mySQLRepo, err := data.NewMySQL()
 	if err != nil {
 		fmt.Println("bad error", err)
 	}
+	restHandler := rest.NewRestHandler(mySQLRepo)
+	router := httprouter.New()
+
+	router.GET("/person", restHandler.HandleGet)
+	router.POST("/person", restHandler.HandlePost)
+
 	person := data.Person{Id: 1, FirstName: "B", LastName: "K"}
 	person2 := data.Person{Id: 2, FirstName: "Johannes", LastName: "Brüderl"}
-	err = mySql.Create(person)
+	err = mySQLRepo.Create(person)
 	if err != nil {
 		fmt.Println("bad error", err)
 	}
-	err = mySql.Create(person2)
+	err = mySQLRepo.Create(person2)
 	if err != nil {
 		fmt.Println("bad error", err)
 	}
 	fmt.Println("finished successfully")
 
 	log.Fatal(http.ListenAndServe(":8888", router))
-
 }
 
 func square(number int) int {

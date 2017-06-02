@@ -2,6 +2,7 @@ package data
 
 type PersonRepository interface {
 	Create(Person) error
+	ReadAll() ([]Person, error)
 }
 
 type Person struct {

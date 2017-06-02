@@ -22,6 +22,24 @@ func (m *mySql) Create(person Person) error {
 	return err
 }
 
+func (m *mySql) ReadAll() ([]Person, error) {
+
+	result := make([]Person, 0)
+	rows, err := m.db.Query("SELECT * from person")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		person := Person{}
+		err = rows.Scan(&person.Id, &person.FirstName, &person.LastName)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, person)
+	}
+	return result, err
+}
+
 func NewMySQL() (*mySql, error) {
 	db, err := sql.Open("mysql", "root:admin1234/A@/localgo")
 
