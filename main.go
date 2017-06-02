@@ -23,6 +23,7 @@ func main() {
 	router.GET("/person", restHandler.HandleGet)
 	router.POST("/person", restHandler.HandlePost)
 
+	log.Print("Starting server")
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
 
