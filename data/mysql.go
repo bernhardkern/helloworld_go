@@ -1,8 +1,8 @@
 package data
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 )
 
 type mySql struct {
@@ -40,8 +40,8 @@ func (m *mySql) ReadAll() ([]Person, error) {
 	return result, err
 }
 
-func NewMySQL() (*mySql, error) {
-	db, err := sql.Open("mysql", "root:admin1234/A@/localgo")
+func NewMySQL(user string, password string, schema string) (PersonRepository, error) {
+	db, err := sql.Open("mysql", user+":"+password+"@/"+schema)
 
 	if err != nil {
 		return nil, err

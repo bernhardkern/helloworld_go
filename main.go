@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	mySQLRepo, err := data.NewMySQL()
+	mySQLRepo, err := data.NewMySQL("test", "test", "test")
 	if err != nil {
 		fmt.Println("bad error", err)
 	}
