@@ -2,7 +2,6 @@ package data
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -10,9 +9,18 @@ type mySql struct {
 	db *sql.DB
 }
 
-func (m *mySql) Create(person Person) error {
-	fmt.Println("we create a person", person.FirstName)
+func NewMySQL(user string, password string, schema string) (PersonRepository, error) {
+	db, err := sql.Open("mysql", user+":"+password+"@/"+schema)
+	if err != nil {
+		return nil, err
+	}
 
+	mySQL := &mySql{db: db}
+	mySQL.initTables()
+	return mySQL, nil
+}
+
+func (m *mySql) Create(person Person) error {
 	stmt, err := m.db.Prepare("INSERT INTO person (first_name, last_name) VAlUES(?, ?)")
 	if err != nil {
 		return err
@@ -45,20 +53,7 @@ func (m *mySql) ReadAll() ([]Person, error) {
 func (m *mySql) initTables() {
 	_, err := m.db.Exec("CREATE TABLE person(id BIGINT(20) NOT NULL AUTO_INCREMENT,first_name VARCHAR(50) NULL DEFAULT NULL, last_name VARCHAR(50) NULL DEFAULT NULL, PRIMARY KEY (id), INDEX id (id))")
 	if err != nil {
-		log.Println("Tables apparently already exist")
 		return
 	}
-	log.Println("Created tables")
-}
-
-func NewMySQL(user string, password string, schema string) (PersonRepository, error) {
-	db, err := sql.Open("mysql", user+":"+password+"@/"+schema)
-
-	if err != nil {
-		return nil, err
-	}
-
-	mySQL := &mySql{db: db}
-	mySQL.initTables()
-	return mySQL, nil
+	log.Println("Created table(s)")
 }
