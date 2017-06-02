@@ -25,7 +25,12 @@ func main() {
 		fmt.Println("bad error", err)
 	}
 	person := data.Person{Id: 1, FirstName: "B", LastName: "K"}
+	person2 := data.Person{Id: 2, FirstName: "Johannes", LastName: "Brüderl"}
 	err = mySql.Create(person)
+	if err != nil {
+		fmt.Println("bad error", err)
+	}
+	err = mySql.Create(person2)
 	if err != nil {
 		fmt.Println("bad error", err)
 	}

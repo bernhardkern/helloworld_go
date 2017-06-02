@@ -12,12 +12,12 @@ type mySql struct {
 func (m *mySql) Create(person Person) error {
 	fmt.Println("we create a person", person.FirstName)
 
-	stmt, err := m.db.Prepare("INSERT INTO person VAlUES(?, ?, ?)")
+	stmt, err := m.db.Prepare("INSERT INTO person (first_name, last_name) VAlUES(?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(person.Id, person.FirstName, person.LastName)
+	_, err = stmt.Exec(person.FirstName, person.LastName)
 
 	return err
 }
