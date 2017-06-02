@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 	"fmt"
+	"log"
 )
 
 type mySql struct {
@@ -40,6 +41,16 @@ func (m *mySql) ReadAll() ([]Person, error) {
 	return result, err
 }
 
+// hacky schema creation for demo purposes
+func (m *mySql) initTables() {
+	_, err := m.db.Exec("CREATE TABLE person(id BIGINT(20) NOT NULL AUTO_INCREMENT,first_name VARCHAR(50) NULL DEFAULT NULL, last_name VARCHAR(50) NULL DEFAULT NULL, PRIMARY KEY (id), INDEX id (id))")
+	if err != nil {
+		log.Println("Tables apparently already exist")
+		return
+	}
+	log.Println("Created tables")
+}
+
 func NewMySQL(user string, password string, schema string) (PersonRepository, error) {
 	db, err := sql.Open("mysql", user+":"+password+"@/"+schema)
 
@@ -47,5 +58,7 @@ func NewMySQL(user string, password string, schema string) (PersonRepository, er
 		return nil, err
 	}
 
-	return &mySql{db: db}, nil
+	mySQL := &mySql{db: db}
+	mySQL.initTables()
+	return mySQL, nil
 }
