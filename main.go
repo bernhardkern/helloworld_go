@@ -42,7 +42,3 @@ func main() {
 	log.Print("Starting server")
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
-
-func square(number int) int {
-	return number * number
-}
