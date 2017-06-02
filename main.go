@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"log"
+	"github.com/bernhardkern/helloworld_go/data"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func Test(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -17,7 +19,20 @@ func main() {
 	fmt.Println("Hello world3")
 	router := httprouter.New()
 	router.GET("/", Test)
+
+	mySql, err := data.NewMySQL()
+	if err != nil {
+		fmt.Println("bad error", err)
+	}
+	person := data.Person{Id: 1, FirstName: "B", LastName: "K"}
+	err = mySql.Create(person)
+	if err != nil {
+		fmt.Println("bad error", err)
+	}
+	fmt.Println("finished successfully")
+
 	log.Fatal(http.ListenAndServe(":8888", router))
+
 }
 
 func square(number int) int {
