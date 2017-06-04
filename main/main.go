@@ -39,6 +39,7 @@ func main() {
 	router.GET("/person", restHandler.HandleGet)
 	router.POST("/person", restHandler.HandlePost)
 
-	log.Print("Starting server")
-	log.Fatal(http.ListenAndServe(":8888", router))
+	port := "8888"
+	log.Printf("Starting server on port %s", port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
